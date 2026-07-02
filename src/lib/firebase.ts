@@ -15,12 +15,8 @@ import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { UserProfile } from "../types";
 let firebaseConfig: any = {};
 
-try {
-  // Try to load local config if it exists
-  // @ts-ignore
-  firebaseConfig = await import("../../firebase-applet-config.json").then(m => m.default || m);
-} catch (e) {
-  // Fallback to environment variables for hosting platforms like Vercel
+// Use Vercel / build environment variables if present
+if (import.meta.env.VITE_FIREBASE_API_KEY) {
   firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -30,6 +26,16 @@ try {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
   };
+} else {
+  // Otherwise try to load local development config
+  try {
+    // Using a dynamic string prevents the bundler from trying to statically resolve the file at build-time
+    const configPath = "../../firebase-applet-config.json";
+    // @ts-ignore
+    firebaseConfig = await import(/* @vite-ignore */ configPath).then(m => m.default || m);
+  } catch (e) {
+    console.warn("No Firebase configuration found. Please set your VITE_FIREBASE_* environment variables.");
+  }
 }
 
 // Initialize Firebase
