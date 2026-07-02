@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Primitives and Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidUserProfile(data) {
+      return data.email is string && data.email.size() <= 200
+          && data.fullName is string && data.fullName.size() <= 200
+          && data.onboarded is bool
+          && data.dailyLogs is list
+          && data.emailSettings is map;
+    }
+
+    // Match users collection
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+  }
+}

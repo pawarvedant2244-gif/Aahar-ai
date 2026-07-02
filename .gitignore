@@ -1,0 +1,11 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Firebase config with live credentials — copy firebase-applet-config.example.json and fill in your values
+firebase-applet-config.json

@@ -1,0 +1,6 @@
+{
+  "name": "Aahar AI - Indian Diet Planner",
+  "description": "A premium glassmorphism AI diet planner for Indian users with dynamic meals, barcode scanning, weight logs, and smart reminders.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

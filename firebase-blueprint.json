@@ -1,0 +1,25 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "The user wellness profile and logs",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "fullName": { "type": "string" },
+        "onboarded": { "type": "boolean" },
+        "onboardingData": { "type": "object" },
+        "dietPlan": { "type": "object" },
+        "dailyLogs": { "type": "array" },
+        "emailSettings": { "type": "object" }
+      },
+      "required": ["email", "fullName", "onboarded", "dailyLogs", "emailSettings"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Individual user wellness files"
+    }
+  }
+}
