@@ -13,7 +13,24 @@ import {
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { UserProfile } from "../types";
-import firebaseConfig from "../../firebase-applet-config.json";
+let firebaseConfig: any = {};
+
+try {
+  // Try to load local config if it exists
+  // @ts-ignore
+  firebaseConfig = await import("../../firebase-applet-config.json").then(m => m.default || m);
+} catch (e) {
+  // Fallback to environment variables for hosting platforms like Vercel
+  firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  };
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
